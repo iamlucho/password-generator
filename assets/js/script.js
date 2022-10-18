@@ -6,15 +6,22 @@ var generateBtn = document.querySelector("#generate");
 var lowercase = "abcdefghijklmnopqrstuvwxyz";
 var uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 var numbers = "0123456789";
-var symbols = "!@#$%^&*_-+=";
+var symbols = "!@#$%^&*_+=";
 
 // Write password to the #password input
 function writePassword() {
-  var password = generatePassword();
+
+  var passlengthbyuser = PasswordLength();
+  var passcharsbyuser = passwordcharacters();
+  var regexstring = new RegExp(passcharsbyuser[1]);
+  
+  var password = generatePassword(passlengthbyuser,passcharsbyuser[0]);
+
+  while(!regexstring.test(password)){
+    password = generatePassword(passlengthbyuser,passcharsbyuser[0]);
+  }
   var passwordText = document.querySelector("#password");
-
   passwordText.value = password;
-
 }
 
 // Add event listener to generate button
@@ -34,28 +41,33 @@ function generatePassword(length, characters){
 //Function to get password length and characters to be used.
 function passwordcharacters(){
   let passwordstring = "";
+  let regexstring = "^";
   while(passwordstring.length<1){
     var includeSpecial = confirm("Click OK if SPECIAL characters should be included in the password.");
     var includeNumber = confirm("Click OK if NUMERIC characters should be included in the password.");
-    var includeLower = confirm("Click OK if Uppercase characters should be included in the password.");
-    var includeUpper = confirm("Click OK if Lowercase characters should be included in the password.");
+    var includeLower = confirm("Click OK if LOWERCASE characters should be included in the password.");
+    var includeUpper = confirm("Click OK if UPPERCASE characters should be included in the password.");
     if(includeSpecial) {
       passwordstring += symbols;
+      regexstring += "(?=.*[!@#$%^&*_+=])";
     }
     if(includeNumber) {
       passwordstring += numbers;
+      regexstring += "(?=.*[0-9])";
     }
     if(includeLower) {
       passwordstring += lowercase;
+      regexstring += "(?=.*[a-z])";
     }
     if(includeUpper) {
       passwordstring += uppercase;
+      regexstring += "(?=.*[A-Z])";
     }
     if(passwordstring.length == 0) {
       alert("Please chose at least one type of character to be included.");
     }
   }
-  return passwordstring;
+  return [passwordstring, regexstring];
 }
 
 //Function to ask user for password length
@@ -63,7 +75,7 @@ function PasswordLength() {
   var passlength=0;
   var lengthcheck=false;
 
-  while(!valid){
+  while(!lengthcheck){
     passlength = parseInt(window.prompt("Enter desired password length between 8-128 characters:"));
     
     if(passlength >=8 && passlength <= 128){
