@@ -13,10 +13,12 @@ function writePassword() {
 
   var passlengthbyuser = PasswordLength();
   var passcharsbyuser = passwordcharacters();
+//Create REGEX for character comparison, this way we ensure the password has desired characters.
   var regexstring = new RegExp(passcharsbyuser[1]);
   
   var password = generatePassword(passlengthbyuser,passcharsbyuser[0]);
-
+//The following while loop ensures that the password has the required characters. 
+//Because of probability, it's possible for the password to fail to choose required characters.
   while(!regexstring.test(password)){
     password = generatePassword(passlengthbyuser,passcharsbyuser[0]);
   }
@@ -39,6 +41,8 @@ function generatePassword(length, characters){
 };
 
 //Function to get password length and characters to be used.
+//It includes all the prompts needed to get user options for the characters.
+//Creates the string of characters to select from and the REGEX string based on user options.
 function passwordcharacters(){
   let passwordstring = "";
   let regexstring = "^";
@@ -71,6 +75,7 @@ function passwordcharacters(){
 }
 
 //Function to ask user for password length
+//Asks the user to enter a desired length. It also checks if the entry is valid.
 function PasswordLength() {
   var passlength=0;
   var lengthcheck=false;
