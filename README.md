@@ -1,5 +1,6 @@
 # Password Generator
 ## Description
+
 A password generator that takes in user preferences and generates password based on these parameters. The parameters include the password length, and characters to be used (symnbols, numbers, upper and lower case letters).
 
 ## User Story
